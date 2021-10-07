@@ -112,6 +112,14 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""6a8b6f00-3cfd-46e4-9f09-1e9eba4f81b7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -268,6 +276,17 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                     ""action"": ""MoveHorizontal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6f0b1d2-cd72-4129-aa0d-d47eb128c471"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -282,6 +301,7 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
         m_Overworld = asset.FindActionMap("Overworld", throwIfNotFound: true);
         m_Overworld_MoveVertical = m_Overworld.FindAction("MoveVertical", throwIfNotFound: true);
         m_Overworld_MoveHorizontal = m_Overworld.FindAction("MoveHorizontal", throwIfNotFound: true);
+        m_Overworld_Select = m_Overworld.FindAction("Select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -374,12 +394,14 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
     private IOverworldActions m_OverworldActionsCallbackInterface;
     private readonly InputAction m_Overworld_MoveVertical;
     private readonly InputAction m_Overworld_MoveHorizontal;
+    private readonly InputAction m_Overworld_Select;
     public struct OverworldActions
     {
         private @PlayerControlSystem m_Wrapper;
         public OverworldActions(@PlayerControlSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @MoveVertical => m_Wrapper.m_Overworld_MoveVertical;
         public InputAction @MoveHorizontal => m_Wrapper.m_Overworld_MoveHorizontal;
+        public InputAction @Select => m_Wrapper.m_Overworld_Select;
         public InputActionMap Get() { return m_Wrapper.m_Overworld; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -395,6 +417,9 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                 @MoveHorizontal.started -= m_Wrapper.m_OverworldActionsCallbackInterface.OnMoveHorizontal;
                 @MoveHorizontal.performed -= m_Wrapper.m_OverworldActionsCallbackInterface.OnMoveHorizontal;
                 @MoveHorizontal.canceled -= m_Wrapper.m_OverworldActionsCallbackInterface.OnMoveHorizontal;
+                @Select.started -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSelect;
+                @Select.performed -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSelect;
+                @Select.canceled -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSelect;
             }
             m_Wrapper.m_OverworldActionsCallbackInterface = instance;
             if (instance != null)
@@ -405,6 +430,9 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                 @MoveHorizontal.started += instance.OnMoveHorizontal;
                 @MoveHorizontal.performed += instance.OnMoveHorizontal;
                 @MoveHorizontal.canceled += instance.OnMoveHorizontal;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
             }
         }
     }
@@ -418,5 +446,6 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
     {
         void OnMoveVertical(InputAction.CallbackContext context);
         void OnMoveHorizontal(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }

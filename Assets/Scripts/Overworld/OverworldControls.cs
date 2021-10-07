@@ -25,6 +25,11 @@ public class OverworldControls : MonoBehaviour
         playerCS.Disable();
     }
 
+    //private void Update()
+    //{
+    //    Debug.Log(playerCS.Overworld.Select.ReadValue<float>());
+    //}
+
     //private void Start()
     //{
     //    //ctx = context

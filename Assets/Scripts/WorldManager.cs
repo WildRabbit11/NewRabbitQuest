@@ -13,6 +13,8 @@ public class WorldManager : MonoBehaviour
     private EnemyParty[] listOfEnemies;
     [HideInInspector] public int activeEnemyID;
 
+    [HideInInspector] public bool gameJustLaunchedFlag = true; //used by PlayerParty.cs to decide whether to reset the unit's values to default
+
     //from BattleImporter
     public GameObject[] playerPrefabs;
     public GameObject[] enemyPrefabs;
@@ -52,11 +54,12 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<PlayerParty>();
-        playerPartyGameObjects = player.playerPartyActive;
+        //playerPartyGameObjects = player.playerPartyActive; --> moved to LoadBattlePrep
     }
 
     public void LoadBattlePrep(int enemyID)//should recieve 
     {
+        playerPartyGameObjects = player.playerPartyActive;
         Debug.Log("enemyID" + enemyID);
         player = FindObjectOfType<PlayerParty>();
         preBattleScene = SceneManager.GetActiveScene().name;

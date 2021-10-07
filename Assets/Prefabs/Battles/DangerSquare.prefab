@@ -103,6 +103,7 @@ MonoBehaviour:
   magDefence: 2
   maxHP: 20
   currentHP: 20
+  defaultMaxHP: 20
   maxMana: 10
   currentMana: 10
   speed: 1

@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 2204630255271220762}
   - component: {fileID: 2174934684853066342}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Sheep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,6 +134,7 @@ MonoBehaviour:
   magDefence: 0
   maxHP: 30
   currentHP: 30
+  defaultMaxHP: 30
   maxMana: 10
   currentMana: 10
   speed: 10

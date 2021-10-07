@@ -72,6 +72,9 @@ public class NewBattleSystem : MonoBehaviour
 
     private bool importerFlag = false;
 
+    private bool specialReturn = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -406,52 +409,60 @@ public class NewBattleSystem : MonoBehaviour
 
     private void FightLoop()
     {
+        Debug.Log("FightLoop Check 1");
         foreach (LogAType i in logAttacks)
         {
             Debug.Log("CasterID" + i.casterID);
         }
         Debug.Log("LOG COUNT " + logAttacks.Count);
-        if(count < logAttacks.Count)
+        if (count < logAttacks.Count)
         {
             currentAttack = logAttacks[count];
             //player attacks
             if (currentAttack.casterID < playerUnits.Count)
             {
-                bool targetCheck = false;
-                while (targetCheck == false)
+                if (!eUnitsActive[0] && !eUnitsActive[1] && !eUnitsActive[2])
                 {
-                    currentUnit = playerUnits[currentAttack.casterID];
-                    if (currentAttack.targetID == 4)
-                    {
-                        defendingGameObject = gameObjectE1;
-                        targetUnit = enemyUnits[0];
-                        if (!eUnitsActive[0])
-                            currentAttack.targetID = 5;
-                        else
-                            targetCheck = true;
-                    }
-                    if (currentAttack.targetID == 5)
-                    {
-                        defendingGameObject = gameObjectE2;
-                        if (enemyUnits.Count > 1)//if statement added later to prevent error of there being no enemyUnits[1] when only one enemy in scene
-                            targetUnit = enemyUnits[1];
-                        if (!eUnitsActive[1])
-                            currentAttack.targetID = 6;
-                        else targetCheck = true;
-                    }
-                    if (currentAttack.targetID == 6)
-                    {
-                        defendingGameObject = gameObjectE3;
-                        if (enemyUnits.Count > 2)
-                            targetUnit = enemyUnits[2];
-                        if (!eUnitsActive[2])
-                            currentAttack.targetID = 4;
-                        else targetCheck = true;
-                    }
+                    specialReturn = true;
                 }
-                Debug.Log("TargetID" + currentAttack.targetID);
-                //targetUnit = enemyUnits[currentAttack.targetID - playerUnits.Count];
-                playerFlag = true;
+                else
+                {
+                    bool targetCheck = false;
+                    while (targetCheck == false)
+                    {
+                        currentUnit = playerUnits[currentAttack.casterID];
+                        if (currentAttack.targetID == 4)
+                        {
+                            defendingGameObject = gameObjectE1;
+                            targetUnit = enemyUnits[0];
+                            if (!eUnitsActive[0])
+                                currentAttack.targetID = 5;
+                            else
+                                targetCheck = true;
+                        }
+                        if (currentAttack.targetID == 5)
+                        {
+                            defendingGameObject = gameObjectE2;
+                            if (enemyUnits.Count > 1)//if statement added later to prevent error of there being no enemyUnits[1] when only one enemy in scene
+                                targetUnit = enemyUnits[1];
+                            if (!eUnitsActive[1])
+                                currentAttack.targetID = 6;
+                            else targetCheck = true;
+                        }
+                        if (currentAttack.targetID == 6)
+                        {
+                            defendingGameObject = gameObjectE3;
+                            if (enemyUnits.Count > 2)
+                                targetUnit = enemyUnits[2];
+                            if (!eUnitsActive[2])
+                                currentAttack.targetID = 4;
+                            else targetCheck = true;
+                        }
+                    }
+                    Debug.Log("TargetID_" + currentAttack.targetID);
+                    //targetUnit = enemyUnits[currentAttack.targetID - playerUnits.Count];
+                    playerFlag = true;
+                }
             }
             else
             {
@@ -461,7 +472,7 @@ public class NewBattleSystem : MonoBehaviour
                     count2 = 0;
                     foreach (bool i in pUnitsActive)
                     {
-                        if(i == true)
+                        if (i == true)
                         {
                             Debug.Log("count2 " + count2);
                             currentAttack.targetID = count2;
@@ -480,47 +491,53 @@ public class NewBattleSystem : MonoBehaviour
 
                 playerFlag = false;
             }
-            canMove = false;
-            if (playerFlag && pUnitsActive[currentAttack.casterID])
-                canMove = true;
-            if (!playerFlag && eUnitsActive[currentAttack.casterID - playerUnits.Count])
-                canMove = true;
-
-            //setting the attacking gameobjects
-            if (playerFlag)
+            if (!specialReturn)
             {
-                if (currentAttack.casterID == 0)
-                    attackingGameObject = gameObjectP1;
-                else if (currentAttack.casterID == 1)
-                    attackingGameObject = gameObjectP2;
-                else if (currentAttack.casterID == 2)
-                    attackingGameObject = gameObjectP3;
-            }
-            else if (!playerFlag)
-            {
-                if (currentAttack.casterID == playerUnits.Count)
-                    attackingGameObject = gameObjectE1;
-                else if (currentAttack.casterID == (playerUnits.Count + 1))
-                    attackingGameObject = gameObjectE2;
-                else if (currentAttack.casterID == (playerUnits.Count + 2))
-                    attackingGameObject = gameObjectE3;
-            }
-
-            count += 1;
-            if (canMove)
-            {
-                if (currentAttack.attackType == AttackType.STRIKE)
+                Debug.Log("EarlyCheckA");
+                canMove = false;
+                if (playerFlag && pUnitsActive[currentAttack.casterID])
+                    canMove = true;
+                if (!playerFlag && eUnitsActive[currentAttack.casterID - playerUnits.Count])
+                    canMove = true;
+                Debug.Log("EarlyCheckB");
+                //setting the attacking gameobjects
+                if (playerFlag)
                 {
-                    Strike();
+                    if (currentAttack.casterID == 0)
+                        attackingGameObject = gameObjectP1;
+                    else if (currentAttack.casterID == 1)
+                        attackingGameObject = gameObjectP2;
+                    else if (currentAttack.casterID == 2)
+                        attackingGameObject = gameObjectP3;
+                }
+                else if (!playerFlag)
+                {
+                    if (currentAttack.casterID == playerUnits.Count)
+                        attackingGameObject = gameObjectE1;
+                    else if (currentAttack.casterID == (playerUnits.Count + 1))
+                        attackingGameObject = gameObjectE2;
+                    else if (currentAttack.casterID == (playerUnits.Count + 2))
+                        attackingGameObject = gameObjectE3;
+                }
+                Debug.Log("EarlyCheckC");
+                count += 1;
+                if (canMove)
+                {
+                    if (currentAttack.attackType == AttackType.STRIKE)
+                    {
+                        Strike();
+                    }
+                    else
+                    {
+                        SpellCast(currentAttack.attackType);
+                    }
                 }
                 else
-                {
-                    SpellCast(currentAttack.attackType);
-                }
+                    FightLoop();
+
             }
             else
-                FightLoop();
-            
+                FightOutcomeCheck();
         }
         else
         {
@@ -530,6 +547,7 @@ public class NewBattleSystem : MonoBehaviour
 
     private void FightOutcomeCheck()
     {
+        Debug.Log("FightOutcomeCheck Check 1");
         foreach (Unit i in playerUnits)
         {
             Debug.Log("Player health: " + i.currentHP);
@@ -538,22 +556,31 @@ public class NewBattleSystem : MonoBehaviour
         {
             Debug.Log("Enemy health: " + i.currentHP);
         }
-
+        Debug.Log("FightOutcomeCheck Check 2");
         playerWinCheck = true;
         foreach(bool i in eUnitsActive)
         {
             if (i == true)
+            {
+                Debug.Log("FightOutcomeCheck Check 2a");
                 playerWinCheck = false;
+            }
         }
         playerLoseCheck = true;
         foreach(bool i in pUnitsActive)
         {
             if (i == true)
+            {
+                Debug.Log("FightOutcomeCheck Check 2b");
                 playerLoseCheck = false;
+            }
         }
-
+        Debug.Log("PlayerWinCheck: " + playerWinCheck);
+        Debug.Log("PlayerLoseCheck: " + playerLoseCheck);
+        Debug.Log("FightOutcomeCheck Check 3");
         if (playerWinCheck)
         {
+            Debug.Log("FightOutcomeCheck Check 3a");
             state = BattleState.WON;
             dialogueText.text = "You have won the fight!";
             if (worldManager.returningFromBattle)
@@ -563,6 +590,7 @@ public class NewBattleSystem : MonoBehaviour
         }
         else if (playerLoseCheck)
         {
+            Debug.Log("FightOutcomeCheck Check 3b");
             state = BattleState.LOST;
             dialogueText.text = "You have lost the fight!";
         }
@@ -573,7 +601,7 @@ public class NewBattleSystem : MonoBehaviour
             currentUnitID = 0;
             logAttacks.Clear();
 
-
+            Debug.Log("FightOutcomeCheck Check 4");
             EffectsPhase();
         }
     }
@@ -654,41 +682,54 @@ public class NewBattleSystem : MonoBehaviour
         }
         HealthBarUpdate();
         StartCoroutine(SurviveCheck());
+        //SurviveCheck();
     }
 
     IEnumerator SurviveCheck()//checks if the unit which took damage is still alive
+    //private void SurviveCheck()
     {
+        Debug.Log("SR Check 1a");
         yield return new WaitForSeconds(1f);
+        Debug.Log("SR Check 1b");
         if (targetUnit.currentHP <= 0 && playerFlag)
         {
+            Debug.Log("SR Check 1c");
             if (currentAttack.targetID == 4)
             {
                 eUnitsActive[0] = false;
                 Destroy(eGameObjects[0]);
+                Debug.Log("SR Check 1d");
             }
             else if (currentAttack.targetID == 5)
             {
                 eUnitsActive[1] = false;
                 Destroy(eGameObjects[1]);
+                Debug.Log("SR Check 1e");
             }
             else if (currentAttack.targetID == 6)
             {
                 eUnitsActive[2] = false;
                 Destroy(eGameObjects[2]);
+                Debug.Log("SR Check 1f");
             }
         }
         else if (targetUnit.currentHP <= 0 && !playerFlag)
         {
             pUnitsActive[currentAttack.targetID] = false;
             Destroy(pGameObjects[currentAttack.targetID]);
+            Debug.Log("SR Check 1g");
         }
-
+        Debug.Log("SR Check 2");
         StartCoroutine(BattleDelay());
+        //BattleDelay();
     }
 
     IEnumerator BattleDelay()
+    //private void BattleDelay()
     {
+        Debug.Log("BD Check 1");
         yield return new WaitForSeconds(1f);
+        Debug.Log("BD Check 2");
         FightLoop();
     }
 
@@ -715,16 +756,24 @@ public class NewBattleSystem : MonoBehaviour
 
     IEnumerator VictoryReturn()
     {
+        Debug.Log("VR Check 1");
         yield return new WaitForSeconds(3f);
+        Debug.Log("VR Check 2");
         count = 0;
         GameObject[] endPlayerParty = new GameObject[worldManager.playerPrefabs.Length];
+        Debug.Log("VR Check 3");
         foreach (GameObject i in worldManager.playerPrefabs)
         {
+            Debug.Log("VR Check 4 count:" + count);
             i.GetComponent<Unit>().currentHP = playerUnits[count].currentHP;
+            Debug.Log("VR Check 5 count:" + count);
             endPlayerParty[count] = i;
+            Debug.Log("VR Check 6 count:" + count);
             count += 1;
         }
+        Debug.Log("VR Check 7");
         worldManager.playerPartyGameObjects = endPlayerParty;
+        Debug.Log("VR Check 8");
         worldManager.VictoryReturn();
     }
 }

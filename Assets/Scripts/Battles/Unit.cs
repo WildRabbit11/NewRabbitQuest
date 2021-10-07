@@ -19,6 +19,7 @@ public class Unit : MonoBehaviour
     
     public int maxHP;
     public int currentHP;
+    public int defaultMaxHP;
 
     public int maxMana;
     public int currentMana;
