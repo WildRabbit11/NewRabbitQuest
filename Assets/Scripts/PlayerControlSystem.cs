@@ -120,6 +120,22 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""137391e7-11cf-4778-a5ac-1b34cfbfcd55"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Space"",
+                    ""type"": ""Button"",
+                    ""id"": ""ceaa617c-3355-4de9-9f55-e695a9bce6e7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -287,6 +303,28 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                     ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ee1cab5-0769-48ba-bffa-9245f56cf892"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""061ccc8e-67dd-47d8-b134-e0050fb7814a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Space"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -302,6 +340,8 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
         m_Overworld_MoveVertical = m_Overworld.FindAction("MoveVertical", throwIfNotFound: true);
         m_Overworld_MoveHorizontal = m_Overworld.FindAction("MoveHorizontal", throwIfNotFound: true);
         m_Overworld_Select = m_Overworld.FindAction("Select", throwIfNotFound: true);
+        m_Overworld_Interact = m_Overworld.FindAction("Interact", throwIfNotFound: true);
+        m_Overworld_Space = m_Overworld.FindAction("Space", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -395,6 +435,8 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
     private readonly InputAction m_Overworld_MoveVertical;
     private readonly InputAction m_Overworld_MoveHorizontal;
     private readonly InputAction m_Overworld_Select;
+    private readonly InputAction m_Overworld_Interact;
+    private readonly InputAction m_Overworld_Space;
     public struct OverworldActions
     {
         private @PlayerControlSystem m_Wrapper;
@@ -402,6 +444,8 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
         public InputAction @MoveVertical => m_Wrapper.m_Overworld_MoveVertical;
         public InputAction @MoveHorizontal => m_Wrapper.m_Overworld_MoveHorizontal;
         public InputAction @Select => m_Wrapper.m_Overworld_Select;
+        public InputAction @Interact => m_Wrapper.m_Overworld_Interact;
+        public InputAction @Space => m_Wrapper.m_Overworld_Space;
         public InputActionMap Get() { return m_Wrapper.m_Overworld; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -420,6 +464,12 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                 @Select.started -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSelect;
                 @Select.performed -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSelect;
                 @Select.canceled -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSelect;
+                @Interact.started -= m_Wrapper.m_OverworldActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_OverworldActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_OverworldActionsCallbackInterface.OnInteract;
+                @Space.started -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSpace;
+                @Space.performed -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSpace;
+                @Space.canceled -= m_Wrapper.m_OverworldActionsCallbackInterface.OnSpace;
             }
             m_Wrapper.m_OverworldActionsCallbackInterface = instance;
             if (instance != null)
@@ -433,6 +483,12 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+                @Space.started += instance.OnSpace;
+                @Space.performed += instance.OnSpace;
+                @Space.canceled += instance.OnSpace;
             }
         }
     }
@@ -447,5 +503,7 @@ public class @PlayerControlSystem : IInputActionCollection, IDisposable
         void OnMoveVertical(InputAction.CallbackContext context);
         void OnMoveHorizontal(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnSpace(InputAction.CallbackContext context);
     }
 }

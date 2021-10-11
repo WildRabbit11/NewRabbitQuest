@@ -9,6 +9,13 @@ public class PlayerController : MonoBehaviour
     //[SerializeField] private Tilemap collisionTilemap;
 
 
+    //dialogue setup
+    [SerializeField] private DialogueUI dialogueUI;
+    public DialogueUI DialogueUI => dialogueUI;
+    public IInteractable Interactable { get; set; }
+    //\dialogue setup
+
+
     public float moveSpeed = 4f;
     public Transform movePoint;
 
@@ -34,6 +41,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dialogueUI.IsOpen)//ALWAYS HAVE AS FIRST ITEM IN Update()
+            return;
+
+        if(ovCon.playerCS.Overworld.Interact.ReadValue<float>() == 1)
+        {
+            if(Interactable != null)
+            {
+                Interactable.Interact(this);
+            }
+        }
+
         if (!moveDelay)
         {
             transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);

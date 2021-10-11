@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   dialogue:
-  - 'There once was a rabbit whoes name was stripes
+  - 'There once was a rabbit whoes name was stripes.
 
     It was a misleading name
-    he had no stripes'
-  - 'When asked about his name he said it was for privicy
+    he had no stripes.'
+  - 'When asked about his name he said it was for privicy.
 
     That he could never
-    be found, they looked for stripes'
+    be found, they looked for stripes.'
   responses:
   - responseText: Yes
     dialogueObject: {fileID: 11400000, guid: 650efbaafe41cb243ab5908ec46827a5, type: 2}
